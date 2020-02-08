@@ -29,3 +29,11 @@ pub struct RedditSite {
     pub data: PaginatedSite
 }
 
+pub fn serialize_redditpage(data: &String) -> RedditSite {
+    let serialized_data: RedditSite = serde_json::from_str(data) 
+    .unwrap_or_else(|error|{
+        panic!("{:?}", error)
+    });
+
+    serialized_data
+}
