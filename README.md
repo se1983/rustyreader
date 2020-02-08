@@ -1,0 +1,2 @@
+# rustyreader
+Simple reddit client
