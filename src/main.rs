@@ -21,7 +21,7 @@ fn print_page(posts: RedditSite) {
 fn main() {
     // sync post request of some json.
 
-    let url = webclient::create_url("all/new", Some(String::from("&limit=1")));
+    let url = webclient::create_url("all/new", Some("&limit=1"));
     let body = webclient::gather_site(url);
     let all = data::serialize_redditpage(&body);
 

@@ -1,9 +1,9 @@
 use std::option::Option;
 use ureq;
 
-pub fn create_url(subreddit: &str, optional_args: Option<String>) -> String {
-    let args = optional_args.unwrap_or(String::from(""));
-    format!("https://www.reddit.com/r/{}.json?{}", subreddit, args)
+pub fn create_url(permalink: &str, optional_args: Option<&str>) -> String {
+    let args = optional_args.unwrap_or("");
+    format!("https://www.reddit.com/r/{}.json?{}", permalink, args)
 }
 
 struct Request {
