@@ -1,6 +1,8 @@
 use std::option::Option;
 use ureq;
 
+use log::{debug, info};
+
 pub fn create_url(permalink: &str, optional_args: Option<&str>) -> String {
     let args = optional_args.unwrap_or("");
     format!("https://www.reddit.com{}.json{}", permalink, args)
@@ -30,17 +32,15 @@ pub fn gather_site(url: String) -> String {
         body: None,
         header: None,
     };
-    println!("({}) >> {} ", req.methode, req.url);
+    info!("({}) >> {} ", req.methode, req.url);
     let resp = req.send();
-    println!("  [{}] ", resp.status());
+    info!("  [{}] ", resp.status());
 
-    // ToDo logging
     let text = resp.into_string().unwrap_or_else(|error| {
         // ToDo Handle error better -- don't panic!
         panic!("{:?}", error)
     });
 
-    // ToDo logging
-    // println!("{}", text);
+    debug!("{}", text);
     text
 }

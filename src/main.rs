@@ -4,6 +4,11 @@ mod webclient;
 use data::string_manipulation;
 use data::RedditSite;
 
+#[macro_use]
+extern crate log;
+extern crate simple_logger;
+use log::LevelFilter;
+
 fn print_page(posts: RedditSite) {
     for post in posts.data.children {
         println!(
@@ -21,6 +26,9 @@ fn print_page(posts: RedditSite) {
 fn main() {
     // sync post request of some json.
 
+    simple_logger::init().unwrap();
+    log::set_max_level(LevelFilter::Info);
+
     let url = webclient::create_url("/r/all/hot", Some("?&limit=1"));
     let body = webclient::gather_site(url);
     let all = data::serialize_redditpage(&body);
@@ -31,6 +39,6 @@ fn main() {
     let comments = data::serialize_comment(&body);
 
     for comment in comments.comments.data.children {
-        println!("{}", comment.data.id)
+        ("{}", comment.data.id);
     }
 }
