@@ -1,7 +1,7 @@
 use std::option::Option;
 use ureq;
 
-use log::{debug, info};
+use log::{info, trace};
 
 pub fn create_url(permalink: &str, optional_args: Option<&str>) -> String {
     let args = optional_args.unwrap_or("");
@@ -34,13 +34,14 @@ pub fn gather_site(url: String) -> String {
     };
     info!("({}) >> {} ", req.methode, req.url);
     let resp = req.send();
-    info!("  [{}] ", resp.status());
+    info!("[{}] ", resp.status());
+    assert!(resp.ok());
 
     let text = resp.into_string().unwrap_or_else(|error| {
         // ToDo Handle error better -- don't panic!
         panic!("{:?}", error)
     });
 
-    debug!("{}", text);
+    trace!("{}", text);
     text
 }

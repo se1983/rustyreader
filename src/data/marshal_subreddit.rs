@@ -17,13 +17,13 @@ pub struct Post {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PaginatedSite {
+pub struct Links {
     pub children: Vec<Post>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RedditSite {
-    pub data: PaginatedSite,
+    pub data: Links,
 }
 
 pub fn serialize_redditpage(data: &String) -> RedditSite {

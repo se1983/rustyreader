@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
+use super::marshal_subreddit;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ChildrenData {
     pub id: String,
@@ -23,7 +25,7 @@ pub struct Listing {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Comments {
-    pub link: Listing,
+    pub link: marshal_subreddit::RedditSite,
     pub comments: Listing,
 }
 
