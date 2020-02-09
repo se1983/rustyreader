@@ -21,9 +21,16 @@ fn print_page(posts: RedditSite) {
 fn main() {
     // sync post request of some json.
 
-    let url = webclient::create_url("all/new", Some("&limit=1"));
+    let url = webclient::create_url("/r/all/hot", Some("?&limit=1"));
     let body = webclient::gather_site(url);
     let all = data::serialize_redditpage(&body);
+    let permalink = &all.data.children[0].data.permalink;
 
-    print_page(all);
+    let url = webclient::create_url(permalink, None);
+    let body = webclient::gather_site(url);
+    let comments = data::serialize_comment(&body);
+
+    for comment in comments.comments.data.children {
+        println!("{}", comment.data.id)
+    }
 }
