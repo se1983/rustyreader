@@ -32,7 +32,8 @@ pub fn gather_site(url: String) -> String {
         body: None,
         header: None,
     };
-    info!("({}) >> {} ", req.methode, req.url);
+    info!("({})", req.methode);
+    info!("({})", req.url);
     let resp = req.send();
     info!("[{}] ", resp.status());
     assert!(resp.ok());

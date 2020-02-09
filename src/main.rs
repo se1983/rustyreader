@@ -1,13 +1,12 @@
 mod data;
 mod webclient;
 
-use data::string_manipulation;
-use data::RedditSite;
-
-#[macro_use]
 extern crate log;
 extern crate simple_logger;
-use log::LevelFilter;
+
+use data::string_manipulation;
+use data::RedditSite;
+use log::{info, LevelFilter};
 
 fn print_page(posts: RedditSite) {
     for post in posts.data.children {
@@ -29,16 +28,21 @@ fn main() {
     simple_logger::init().unwrap();
     log::set_max_level(LevelFilter::Info);
 
-    let url = webclient::create_url("/r/all/hot", Some("?&limit=1"));
+    let url = webclient::create_url("/r/all/hot", Some("?&limit=3"));
     let body = webclient::gather_site(url);
     let all = data::serialize_redditpage(&body);
-    let permalink = &all.data.children[0].data.permalink;
 
-    let url = webclient::create_url(permalink, None);
-    let body = webclient::gather_site(url);
-    let comments = data::serialize_comment(&body);
-
-    for comment in comments.comments.data.children {
-        ("{}", comment.data.id);
+    for children in &all.data.children {
+        let permalink = &children.data.permalink;
+        let url = webclient::create_url(permalink, None);
+        let body = webclient::gather_site(url);
+        let comments = data::serialize_comment(&body);
+        info!(
+            "comments of {}",
+            comments.link.data.children[0].data.permalink
+        );
+        for comment in comments.comments.data.children {
+            ("{}", comment.data.id);
+        }
     }
 }
