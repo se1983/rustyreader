@@ -1,5 +1,5 @@
 [package]
-name = "untitled"
+name = "rustyreader"
 version = "0.1.0"
 authors = ["sebsch <sebsch@geblubber.org>"]
 edition = "2018"
