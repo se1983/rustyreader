@@ -1,5 +1,5 @@
+pub mod marshal_subreddit;
 pub mod string_manipulation;
-pub mod marshal_types;
 
-pub use marshal_types::RedditSite;
-pub use marshal_types::serialize_redditpage;
+pub use marshal_subreddit::serialize_redditpage;
+pub use marshal_subreddit::RedditSite;
