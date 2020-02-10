@@ -8,6 +8,7 @@ use data::string_manipulation;
 use data::RedditSite;
 use log::{info, LevelFilter};
 
+#[allow(dead_code)]
 fn print_page(posts: RedditSite) {
     for post in posts.data.children {
         println!(

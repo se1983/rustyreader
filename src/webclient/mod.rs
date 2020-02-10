@@ -11,6 +11,7 @@ pub fn create_url(permalink: &str, optional_args: Option<&str>) -> String {
     format!("https://www.reddit.com{}.json{}", permalink, args)
 }
 
+#[allow(dead_code)]
 struct Request {
     methode: String,
     url: String,
