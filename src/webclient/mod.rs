@@ -4,6 +4,9 @@ use ureq;
 use log::{info, trace};
 
 pub fn create_url(permalink: &str, optional_args: Option<&str>) -> String {
+    // TODO URL builder  https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+    // - optional args
+    // - optional json
     let args = optional_args.unwrap_or("");
     format!("https://www.reddit.com{}.json{}", permalink, args)
 }
