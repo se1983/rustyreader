@@ -27,8 +27,8 @@ pub struct RedditSite {
 }
 
 pub fn serialize_redditpage(data: &String) -> RedditSite {
-    let serialized_data: RedditSite =
+    let subreddit_page: RedditSite =
         serde_json::from_str(data).unwrap_or_else(|error| panic!("{:?}", error));
 
-    serialized_data
+    subreddit_page
 }
