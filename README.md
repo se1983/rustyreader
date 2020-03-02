@@ -11,9 +11,15 @@ Just a rust learning project.  Working with data and API from reddit
 
 
 ## TODOs
+- add consteuczltor for marshalled data with using traits  with serde deserializer
+```rust
+// Something like this
+let deserialized_data = RedditPage::new(&data)
+```
 - Analyze data
 - Auth
 - POSTing data
+
 
 
 
