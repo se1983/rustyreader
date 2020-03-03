@@ -1,5 +1,5 @@
-
-Just a rust learning project. Working with data and API from reddit
+# RustyReader 
+Just a rust learning project. Working with data and the public API from reddit
 
 Features
 • HTTP client implementated in ureq
