@@ -1,15 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
-pub trait SerdeDeserializeObject {
-    fn new<'de>(data: &'de str) -> Self
-    where
-        Self: Deserialize<'de>,
-    {
-        let serialized_data: Self = serde_json::from_str(&data).unwrap();
-        serialized_data
-    }
-}
+use super::SerdeDeserializeObject;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Data {
