@@ -10,12 +10,12 @@ pub trait SerdeDeserializeObject {
     }
 }
 
+impl SerdeDeserializeObject for RedditSite {}
+impl SerdeDeserializeObject for Comments {}
+
 pub mod marshal_comment;
 pub mod marshal_subreddit;
 pub mod string_manipulation;
-
-impl SerdeDeserializeObject for RedditSite {}
-impl SerdeDeserializeObject for Comments {}
 
 pub use marshal_comment::Comments;
 pub use marshal_subreddit::RedditSite;
