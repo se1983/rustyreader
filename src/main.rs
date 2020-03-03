@@ -5,7 +5,7 @@ extern crate log;
 extern crate simple_logger;
 
 use data::string_manipulation;
-use data::RedditSite;
+use data::{Comments, RedditSite, SerdeDeserializeObject};
 use log::{info, LevelFilter};
 
 #[allow(dead_code)]
@@ -31,19 +31,19 @@ fn main() {
 
     let url = webclient::create_url("/r/all/hot", Some("?&limit=3"));
     let body = webclient::gather_site(url);
-    let all = data::serialize_redditpage(&body);
+    let all = data::RedditSite::new(&body);
 
     for children in &all.data.children {
         let permalink = &children.data.permalink;
         let url = webclient::create_url(permalink, None);
         let body = webclient::gather_site(url);
-        let comments = data::serialize_comment(&body);
+        let comments = Comments::new(&body);
         info!(
             "comments of {}",
             comments.link.data.children[0].data.permalink
         );
         for comment in comments.comments.data.children {
-            ("{}", comment.data.id);
+            println!("{}", comment.data.id);
         }
     }
 }

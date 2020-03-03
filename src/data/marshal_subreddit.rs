@@ -25,10 +25,3 @@ pub struct Links {
 pub struct RedditSite {
     pub data: Links,
 }
-
-pub fn serialize_redditpage(data: &String) -> RedditSite {
-    let subreddit_page: RedditSite =
-        serde_json::from_str(data).unwrap_or_else(|error| panic!("{:?}", error));
-
-    subreddit_page
-}
