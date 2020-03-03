@@ -26,9 +26,15 @@ pub struct RedditSite {
     pub data: Links,
 }
 
-pub fn serialize_redditpage(data: &String) -> RedditSite {
-    let subreddit_page: RedditSite =
-        serde_json::from_str(data).unwrap_or_else(|error| panic!("{:?}", error));
-
-    subreddit_page
+pub trait SerdeDeserializeObject {
+    fn new<'de>(&self, data: &'de &String) -> Self
+    where
+        Self: Deserialize<'de>,
+    {
+        let serialized_data: Self =
+            serde_json::from_str(data).unwrap_or_else(|error| panic!("{:?}", error));
+        serialized_data
+    }
 }
+
+impl SerdeDeserializeObject for RedditSite {}
