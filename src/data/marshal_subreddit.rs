@@ -1,6 +1,16 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
+pub trait SerdeDeserializeObject {
+    fn new<'de>(data: &'de str) -> Self
+    where
+        Self: Deserialize<'de>,
+    {
+        let serialized_data: Self = serde_json::from_str(&data).unwrap();
+        serialized_data
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Data {
     pub title: String,
@@ -24,17 +34,6 @@ pub struct Links {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RedditSite {
     pub data: Links,
-}
-
-pub trait SerdeDeserializeObject {
-    fn new<'de>(&self, data: &'de &String) -> Self
-    where
-        Self: Deserialize<'de>,
-    {
-        let serialized_data: Self =
-            serde_json::from_str(data).unwrap_or_else(|error| panic!("{:?}", error));
-        serialized_data
-    }
 }
 
 impl SerdeDeserializeObject for RedditSite {}
