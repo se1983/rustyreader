@@ -1,15 +1,14 @@
 # RustyReader 
 Just a rust learning project. Working with data and the public API from reddit
 
-Features
+## Features
 
 - HTTP client implementated in ureq
 - Marshaling JSON with serde
 - Reading Redditpage and Comments
 
-TODOs
-• unify webclient API -- add Simple entry point
-
+## TODOs
+- unify webclient API -- add Simple entry point
 ```rust
 redditclient::get_data("/r/all/new").limit(15)
 ```
