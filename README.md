@@ -13,8 +13,7 @@ TODOs
 ```rust
 redditclient::get_data("/r/all/new").limit(15)
 ```
-
-• Analyze data
-• Auth
-• POSTing data
+- Analyze data
+- Auth
+- POSTing data
 
