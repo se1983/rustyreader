@@ -1,6 +1,4 @@
 
-rustyreader
-
 Just a rust learning project. Working with data and API from reddit
 
 Features
@@ -12,7 +10,7 @@ Features
 TODOs
 • unify webclient API -- add Simple entry point
 
-```
+```rust
 redditclient::get_data("/r/all/new").limit(15)
 ```
 
