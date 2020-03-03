@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
-use super::SerdeDeserializeObject;
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Data {
     pub title: String,
@@ -27,5 +25,3 @@ pub struct Links {
 pub struct RedditSite {
     pub data: Links,
 }
-
-impl SerdeDeserializeObject for RedditSite {}
