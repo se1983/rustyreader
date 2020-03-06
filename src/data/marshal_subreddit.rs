@@ -25,3 +25,28 @@ pub struct Links {
 pub struct RedditSite {
     pub data: Links,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_comment() {
+        let listing = RedditSite {
+            data: Links {
+                children: vec![Post {
+                    data: Data {
+                        title: String::from("Title"),
+                        name: String::from("Name"),
+                        author: String::from("Author"),
+                        subreddit: String::from("Subreddit"),
+                        ups: 2,
+                        permalink: String::from("Permalink"),
+                    },
+                }],
+            },
+        };
+
+        assert_eq!(listing.data.children[0].data.title, "Title");
+    }
+}
