@@ -10,7 +10,7 @@ Just a rust learning project. Working with data and the public API from reddit
 ## TODOs
 - unify webclient API -- add Simple entry point
 ```rust
-redditclient::get_data("/r/all/new").limit(15)
+RedditClient::get_data("/r/all/new").limit(15)
 ```
 - Analyze data
 - Auth
