@@ -1,7 +1,7 @@
 use std::option::Option;
 use ureq;
 
-use log::{info, trace};
+use log::{info, trace, error};
 
 pub fn create_url(permalink: &str, optional_args: Option<&str>) -> String {
     // TODO URL builder  https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
@@ -49,4 +49,8 @@ pub fn gather_site(url: String) -> String {
 
     trace!("{}", text);
     text
+}
+
+pub trait WebClient{
+    fn get()
 }
