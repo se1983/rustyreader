@@ -10,7 +10,10 @@ println!("{}", listings[0].comment.link.data.children[0].data.title);
 ```
 
 
-The idea / goal of the project is a configurable reddit-bot. It reads definitions and commands from yaml files and is able to load plugins to reply to specified commands in specified subreddits.
+## Goal
+The idea  of the project is a configurable reddit-bot. 
+
+It reads definitions and commands from yaml files and is able to load plugins to reply to specified commands in specified subreddits.
 
 1. Read yaml files for definitions and commands (eg: subreddit, trigger, answer)
 2. Use declaration to load plugins
