@@ -1,11 +1,15 @@
-use serde::Deserialize;
-
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
 use log::error;
 
-pub trait SerdeDeserializeObject {
+impl Unmarshal for RedditSite {}
+
+impl Unmarshal for Comments {}
+
+pub trait Unmarshal {
     fn new<'de>(data: &'de str) -> Self
-    where
-        Self: Deserialize<'de>,
+        where
+            Self: Deserialize<'de>,
     {
         let serialized_data: Self = serde_json::from_str(&data).unwrap_or_else(|error| {
             error!("{}", error);
@@ -15,15 +19,60 @@ pub trait SerdeDeserializeObject {
     }
 }
 
-impl SerdeDeserializeObject for RedditSite {}
-impl SerdeDeserializeObject for Comments {}
 
-pub mod marshal_comment;
-pub mod marshal_subreddit;
-pub mod string_manipulation;
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ChildrenData {
+    pub id: String,
+}
 
-pub use marshal_comment::Comments;
-pub use marshal_subreddit::RedditSite;
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Children {
+    pub kind: String,
+    pub data: ChildrenData,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ListingData {
+    pub children: Vec<Children>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Listing {
+    pub data: ListingData,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Comments {
+    pub link: RedditSite,
+    pub comments: Listing,
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Data {
+    pub title: String,
+    pub name: String,
+    pub author: String,
+    pub subreddit: String,
+    pub ups: i32,
+    pub permalink: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Post {
+    pub data: Data,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Links {
+    pub children: Vec<Post>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RedditSite {
+    pub data: Links,
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -43,5 +92,60 @@ mod tests {
     fn test_marshaling_false_body_fails() {
         let data = r#"{kind": "Listing", "data": {"modhash": "", "dist": 1, "FOO": []}"#;
         RedditSite::new(&data);
+    }
+
+    #[test]
+    fn test_comment() {
+        let listing = RedditSite {
+            data: Links {
+                children: vec![Post {
+                    data: Data {
+                        title: String::from("Title"),
+                        name: String::from("Name"),
+                        author: String::from("Author"),
+                        subreddit: String::from("Subreddit"),
+                        ups: 2,
+                        permalink: String::from("Permalink"),
+                    },
+                }],
+            },
+        };
+
+        assert_eq!(listing.data.children[0].data.title, "Title");
+    }
+
+
+    #[test]
+    fn test_comment_data() {
+        let listing = RedditSite {
+            data: Links {
+                children: vec![Post {
+                    data: Data {
+                        title: String::from("Title"),
+                        name: String::from("Name"),
+                        author: String::from("Author"),
+                        subreddit: String::from("Subreddit"),
+                        ups: 2,
+                        permalink: String::from("Permalink"),
+                    },
+                }],
+            },
+        };
+
+        let comments = Comments {
+            link: listing,
+            comments: Listing {
+                data: ListingData {
+                    children: vec![Children {
+                        kind: String::from("Comment-kind"),
+                        data: ChildrenData {
+                            id: String::from("Comment_id"),
+                        },
+                    }],
+                },
+            },
+        };
+
+        assert_eq!(comments.comments.data.children[0].data.id, "Comment_id")
     }
 }
