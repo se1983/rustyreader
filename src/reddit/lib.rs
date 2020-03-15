@@ -1,7 +1,6 @@
 use log::error;
 
-use super::Unmarshal;
-use super::data::{Comments, RedditSite};
+use super::data::{Comments, RedditSite, Unmarshal};
 
 
 pub struct RedditClient {
