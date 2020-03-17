@@ -6,7 +6,7 @@ use super::data::{Comments, RedditSite, Unmarshal};
 pub struct RedditClient {
     base_url: String,
     subreddit: String,
-    queries: Vec<(String, String)>,
+    queries: String,
 
     listings: Option<Comments>,
     request: Option<ureq::Request>,
@@ -25,7 +25,7 @@ impl RedditClient {
         Self {
             base_url: String::from("https://reddit.com"),
             subreddit,
-            queries: vec![],
+            queries: String::from(""),
             listings: None,
             request: None,
             response: None,
@@ -33,7 +33,10 @@ impl RedditClient {
     }
 
     fn add_query<'a>(&'a mut self, name: String, value: String) -> &'a mut Self {
-        self.queries.push((name, value));
+        self.queries = match self.queries.as_str() {
+            "" => format!("?{}={}", name, value),
+            _ => format!("{}&{}={}", &self.queries, name, value)
+        };
         self
     }
 
@@ -43,17 +46,7 @@ impl RedditClient {
 
     fn download_reddit_site(&self) -> RedditSite {
         let url = format!("{}{}.json", self.base_url, self.subreddit);
-        let query = match self.queries.len() {
-            0 => String::from(""),
-            _ => {
-                let mut query = String::from("?");
-                for qry in &self.queries {
-                    query.push_str(&format!("{}={}&", qry.0, qry.1));
-                }
-                query
-            }
-        };
-        let response = send_request("GET", &url, &query)
+        let response = send_request("GET", &url, &self.queries)
             .into_string()
             .unwrap_or_else(|error| {
                 // ToDo Handle error better -- don't panic!
