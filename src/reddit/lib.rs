@@ -7,17 +7,21 @@ pub struct RedditClient {
     base_url: String,
     subreddit: String,
     queries: String,
-
-    listings: Option<Comments>,
-    request: Option<ureq::Request>,
-    response: Option<ureq::Response>,
 }
 
 fn send_request(method: &str, url: &str, query: &str) -> ureq::Response {
-    match method {
-        "GET" => ureq::get(&url).query_str(&query).call(),
+    let response = match method {
+        "GET" => {
+            ureq::get(&url)
+                .query_str(&query)
+                .timeout_read(500)
+                .call()
+        },
         _ => panic!("methode {} not defined!", method),
-    }
+    };
+    assert!(response.ok());
+
+    response
 }
 
 impl RedditClient {
@@ -26,9 +30,6 @@ impl RedditClient {
             base_url: String::from("https://reddit.com"),
             subreddit,
             queries: String::from(""),
-            listings: None,
-            request: None,
-            response: None,
         }
     }
 
@@ -69,6 +70,7 @@ impl RedditClient {
                     .unwrap(),
             ));
         }
+
         listings
     }
 
