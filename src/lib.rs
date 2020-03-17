@@ -4,12 +4,12 @@ use reddit::RedditClient;
 
 
 pub fn run() {
-    let subreddit = String::from("/r/programming/new");
-    let comments = RedditClient::new(subreddit).limit(3).get();
-    for comment in comments {
+    let listings = RedditClient::new("/r/programming/new").limit(3).get();
+
+    for listing in listings {
         println!("{}\n\thttps://reddit.com{}\n",
-                 comment.link.data.children[0].data.title,
-                 comment.link.data.children[0].data.permalink
+                 listing.link.data.children[0].data.title,
+                 listing.link.data.children[0].data.permalink
         );
     }
 }

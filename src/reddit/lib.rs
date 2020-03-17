@@ -25,10 +25,10 @@ fn send_request(method: &str, url: &str, query: &str) -> ureq::Response {
 }
 
 impl RedditClient {
-    pub fn new(subreddit: String) -> Self {
+    pub fn new(subreddit: &str) -> Self {
         Self {
             base_url: String::from("https://reddit.com"),
-            subreddit,
+            subreddit: String::from(subreddit),
             queries: String::from(""),
         }
     }
