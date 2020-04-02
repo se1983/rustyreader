@@ -9,12 +9,9 @@ impl Unmarshal for Comments {}
 pub trait Unmarshal {
     fn new<'de>(data: &'de str) -> Self
         where
-            Self: Deserialize<'de>,
-    {
-        let serialized_data: Self = serde_json::from_str(&data).unwrap_or_else(|error| {
-            error!("{}", error);
-            panic!("{:?}", error)
-        });
+            Self: Deserialize<'de> {
+
+        let serialized_data: Self = serde_json::from_str(&data).unwrap();
         serialized_data
     }
 }
