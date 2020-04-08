@@ -1,12 +1,16 @@
 # RustyReader
 
-**NOTE!** This is just a project to learn rust and having some fun coding. The code at the current state is not meant to run in realitity and will change rappidly! Feel free to look into the code but I am not looking for contributers, improvement proposals are very welcome.
+**NOTE!** This is *just a learning-project* for rust to have some fun coding. The code at the current state is not meant to run in realitity and will change rappidly! 
+
 
 ```rust
-let subreddit = String::from("/r/programming/new");
-let listings = RedditClient::new(subreddit).limit(5).get();
-println!("{}", listings[0].comment.link.data.children[0].data.title);
-// Implementing the Clipper chip cipher in Rust
+let listings = RedditClient::new("/r/programming").limit(30).get();
+for listing in listings {
+    println!("{}\n\thttps://reddit.com{}\n",
+             listing.link.data.children[0].data.title,
+             listing.link.data.children[0].data.permalink
+    );
+}
 ```
 
 
