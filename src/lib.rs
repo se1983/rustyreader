@@ -4,7 +4,7 @@ use reddit::RedditClient;
 
 
 pub fn run() {
-    let listings = RedditClient::new("/r/programming/new").limit(3).get();
+    let listings = RedditClient::new("/r/programming").limit(30).get();
 
     for listing in listings {
         println!("{}\n\thttps://reddit.com{}\n",
