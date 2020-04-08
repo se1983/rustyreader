@@ -1,28 +1,15 @@
-use log::error;
-
 use super::data::{Comments, RedditSite, Unmarshal};
+use super::requests;
 
 
 pub struct RedditClient {
     base_url: String,
     subreddit: String,
     queries: String,
+    webclient: requests::Cacher,
+
 }
 
-fn send_request(method: &str, url: &str, query: &str) -> ureq::Response {
-    let response = match method {
-        "GET" => {
-            ureq::get(&url)
-                .query_str(&query)
-                .timeout_read(500)
-                .call()
-        },
-        _ => panic!("methode {} not defined!", method),
-    };
-    assert!(response.ok());
-
-    response
-}
 
 impl RedditClient {
     pub fn new(subreddit: &str) -> Self {
@@ -30,6 +17,9 @@ impl RedditClient {
             base_url: String::from("https://reddit.com"),
             subreddit: String::from(subreddit),
             queries: String::from(""),
+            webclient: requests::Cacher::new(|url| {
+                ureq::get(url).call().into_string().unwrap()
+            }),
         }
     }
 
@@ -45,32 +35,20 @@ impl RedditClient {
         self.add_query(String::from("limit"), format!("{}", value))
     }
 
-    fn download_reddit_site(&self) -> RedditSite {
-        let url = format!("{}{}.json", self.base_url, self.subreddit);
-        let response = send_request("GET", &url, &self.queries)
-            .into_string()
-            .unwrap_or_else(|error| {
-                // ToDo Handle error better -- don't panic!
-                error!("{}", error);
-                panic!("{:?}", error)
-            });
-        RedditSite::new(&response)
+    fn download_reddit_site(&mut self) -> RedditSite {
+        let url = format!("{}{}.json{}", self.base_url, self.subreddit, self.queries);
+        let data = self.webclient.data(&url);
+        RedditSite::new(&data)
     }
 
-    fn download_listings(&self, site: RedditSite) -> Vec<Comments> {
+    fn download_listings(&mut self, site: RedditSite) -> Vec<Comments> {
         let mut listings = vec![];
         for post in site.data.children {
+            let url = format!("{}{}.json", self.base_url, post.data.permalink);
             listings.push(Comments::new(
-                &send_request(
-                    "GET",
-                    &format!("{}{}.json", self.base_url, post.data.permalink),
-                    "",
-                )
-                    .into_string()
-                    .unwrap(),
+                &self.webclient.data(&url)
             ));
         }
-
         listings
     }
 

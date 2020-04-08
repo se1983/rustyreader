@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use log::error;
 
 impl Unmarshal for RedditSite {}
 
