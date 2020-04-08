@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::time::{Instant, Duration};
+use log::info;
 
 
 pub struct Cacher {
@@ -18,13 +19,17 @@ impl Cacher {
     }
 
     pub(crate) fn data(&mut self, url: &str) -> String {
-        println!("Calling request {}", &url);
 
         match self.data.get(url) {
-            Some((data, created)) if created.elapsed() < self.cache_time => data.clone(),
+            Some((data, created)) if created.elapsed() < self.cache_time => {
+                info!("Using cached Data from {} s ago.", created.elapsed().as_secs());
+                data.clone()
+            },
             _ => {
+                info!("Start request {}", url);
                 let now = Instant::now();
                 let data = (self.call)(url);
+                info!("Request done.");
                 self.data.insert(String::from(url), (data.clone(), now));
                 data
             }

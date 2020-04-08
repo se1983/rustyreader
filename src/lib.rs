@@ -4,12 +4,13 @@ use reddit::RedditClient;
 
 
 pub fn run() {
-    let listings = RedditClient::new("/r/programming").limit(30).get();
+    let listings = RedditClient::new("/r/all").limit(3).get();
 
     for listing in listings {
-        println!("{}\n\thttps://reddit.com{}\n",
+        println!("\n\n'{}' has {} comments.\n\t\thttps://reddit.com{}\n\t ",
                  listing.link.data.children[0].data.title,
-                 listing.link.data.children[0].data.permalink
+                 listing.comments.data.children.len(),
+                 listing.link.data.children[0].data.permalink,
         );
     }
 }

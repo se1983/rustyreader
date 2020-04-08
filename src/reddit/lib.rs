@@ -18,6 +18,7 @@ impl RedditClient {
             subreddit: String::from(subreddit),
             queries: String::from(""),
             webclient: requests::Cacher::new(|url| {
+                log::warn!("Requesting [GET] {}", url);
                 ureq::get(url).call().into_string().unwrap()
             }),
         }
