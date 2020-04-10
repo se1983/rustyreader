@@ -7,7 +7,30 @@ pub struct RedditClient {
     subreddit: String,
     queries: String,
     webclient: requests::Cacher,
+    position: usize,
+}
 
+impl Iterator for RedditClient {
+    type Item = Comments;
+    fn next(&mut self) -> Option<Self::Item> {
+        let url = format!("{}{}.json{}", self.base_url, self.subreddit, self.queries);
+        let data = self.webclient.data(&url);
+        let site = RedditSite::new(&data);
+
+        if self.position >= site.data.children.len() {
+            return None
+        };
+
+        let url = format!("{}{}.json",
+                          self.base_url,
+                          site.data.children[self.position].data.permalink
+        );
+        let listing = Comments::new(
+            &self.webclient.data(&url)
+        );
+        self.position += 1;
+        Some(listing)
+    }
 }
 
 
@@ -21,8 +44,10 @@ impl RedditClient {
                 log::warn!("Requesting [GET] {}", url);
                 ureq::get(url).call().into_string().unwrap()
             }),
+            position: 0
         }
     }
+
 
     fn add_query<'a>(&'a mut self, name: String, value: String) -> &'a mut Self {
         self.queries = match self.queries.as_str() {
@@ -36,25 +61,5 @@ impl RedditClient {
         self.add_query(String::from("limit"), format!("{}", value))
     }
 
-    fn download_reddit_site(&mut self) -> RedditSite {
-        let url = format!("{}{}.json{}", self.base_url, self.subreddit, self.queries);
-        let data = self.webclient.data(&url);
-        RedditSite::new(&data)
-    }
 
-    fn download_listings(&mut self, site: RedditSite) -> Vec<Comments> {
-        let mut listings = vec![];
-        for post in site.data.children {
-            let url = format!("{}{}.json", self.base_url, post.data.permalink);
-            listings.push(Comments::new(
-                &self.webclient.data(&url)
-            ));
-        }
-        listings
-    }
-
-    pub fn get<'a>(&'a mut self) -> Vec<Comments> {
-        let reddit_site = self.download_reddit_site();
-        self.download_listings(reddit_site)
-    }
 }
