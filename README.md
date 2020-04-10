@@ -4,13 +4,14 @@
 
 
 ```rust
-let listings = RedditClient::new("/r/programming").limit(30).get();
-for listing in listings {
-    println!("{}\n\thttps://reddit.com{}\n",
+for listing in RedditClient::new("/r/all").limit(3) {
+    println!("\n\n'{}' has {} comments.\n\t\thttps://reddit.com{}\n\t ",
              listing.link.data.children[0].data.title,
-             listing.link.data.children[0].data.permalink
+             listing.comments.data.children.len(),
+             listing.link.data.children[0].data.permalink,
     );
-}
+};
+
 ```
 
 
