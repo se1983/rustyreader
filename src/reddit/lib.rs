@@ -16,14 +16,12 @@ impl Iterator for RedditClient {
         let url = format!("{}{}.json{}", self.base_url, self.subreddit, self.queries);
         let data = self.webclient.data(&url);
         let site = RedditSite::new(&data);
-
         if self.position >= site.data.children.len() {
             return None
         };
 
-        let url = format!("{}{}.json",
-                          self.base_url,
-                          site.data.children[self.position].data.permalink
+        let url = format!(
+            "{}{}.json", self.base_url, site.data.children[self.position].data.permalink
         );
         let listing = Comments::new(
             &self.webclient.data(&url)
@@ -40,14 +38,10 @@ impl RedditClient {
             base_url: String::from("https://reddit.com"),
             subreddit: String::from(subreddit),
             queries: String::from(""),
-            webclient: requests::Cacher::new(|url| {
-                log::warn!("Requesting [GET] {}", url);
-                ureq::get(url).call().into_string().unwrap()
-            }),
-            position: 0
+            webclient: requests::Cacher::new(requests::get_request()),
+            position: 0,
         }
     }
-
 
     fn add_query<'a>(&'a mut self, name: String, value: String) -> &'a mut Self {
         self.queries = match self.queries.as_str() {
