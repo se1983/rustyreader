@@ -54,6 +54,8 @@ pub struct Data {
     pub subreddit: String,
     pub ups: i32,
     pub permalink: String,
+    pub url: String,
+    pub selftext: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
