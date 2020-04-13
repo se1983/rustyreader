@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+
+use serde::{Deserialize, Serialize};
 
 impl Unmarshal for RedditSite {}
 
@@ -137,6 +138,7 @@ mod tests {
                         kind: String::from("Comment-kind"),
                         data: ChildrenData {
                             id: String::from("Comment_id"),
+                            body: None,
                         },
                     }],
                 },
