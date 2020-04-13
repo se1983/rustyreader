@@ -18,8 +18,7 @@ impl Cacher {
         }
     }
 
-    pub(crate) fn data(&mut self, url: &str) -> String {
-
+    pub fn data(&mut self, url: &str) -> String {
         match self.data.get(url) {
             Some((data, created)) if created.elapsed() < self.cache_time => {
                 info!("Using cached Data from {} s ago.", created.elapsed().as_secs());
@@ -37,3 +36,11 @@ impl Cacher {
     }
 }
 
+
+pub fn get_request() -> impl Fn(&str) -> String {
+    move |url| {
+        log::info!("Requesting [GET] {}", url);
+        let response = ureq::get(url).call();
+        response.into_string().unwrap()
+    }
+}
