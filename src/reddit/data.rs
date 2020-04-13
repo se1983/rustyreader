@@ -19,6 +19,7 @@ pub trait Unmarshal {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ChildrenData {
     pub id: String,
+    pub body: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
