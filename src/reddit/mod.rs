@@ -1,6 +1,6 @@
+pub use lib::RedditClient;
+
 mod lib;
 mod data;
-mod requests;
-
-pub use lib::RedditClient;
+pub mod requests;
 

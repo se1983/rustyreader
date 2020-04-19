@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
 
 use super::data::{Comments, RedditSite, Unmarshal};
 use super::requests;
@@ -32,18 +33,18 @@ pub struct RedditClient {
     base_url: String,
     subreddit: String,
     queries: Queries,
-    webclient: requests::Cacher,
+    webclient: Arc<Mutex<requests::Cacher>>,
     position: usize,
 }
 
 
 impl RedditClient {
-    pub fn new(subreddit: &str) -> Self {
+    pub fn new(subreddit: &str, webclient: Arc<Mutex<requests::Cacher>>) -> Self {
         Self {
             base_url: String::from("https://reddit.com"),
             subreddit: String::from(subreddit),
             queries: Queries::new(),
-            webclient: requests::Cacher::new(requests::get_request()),
+            webclient,
             position: 0,
         }
     }
@@ -60,7 +61,7 @@ impl Iterator for RedditClient {
     type Item = Comments;
     fn next(&mut self) -> Option<Self::Item> {
         let url = format!("{}{}.json{}", self.base_url, self.subreddit, self.queries.as_string());
-        let data = self.webclient.data(&url);
+        let data = self.webclient.lock().unwrap().data(&url);
         let site = RedditSite::new(&data);
         if self.position >= site.data.children.len() {
             return None
@@ -70,7 +71,7 @@ impl Iterator for RedditClient {
             "{}{}.json", self.base_url, site.data.children[self.position].data.permalink
         );
         let listing = Comments::new(
-            &self.webclient.data(&url)
+            &self.webclient.lock().unwrap().data(&url)
         );
         self.position += 1;
         Some(listing)
