@@ -5,8 +5,9 @@ mod reddit;
 pub fn run() {
 
     let searchwords = vec!("Rust", "skajsdkahk");
+    let subreddit = "/r/rust";
 
-    for (_, listing) in RedditClient::new("/r/rust").limit(100).enumerate() {
+    for (_, listing) in RedditClient::new(subreddit).limit(100).enumerate() {
         for l in listing.comments.data.children.iter()
             .into_iter()
             .filter(|x| x.data.body.is_some())
